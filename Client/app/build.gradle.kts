@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -48,13 +49,16 @@ android {
 		}
 	}
 
+	kotlin {
+		compilerOptions {
+			jvmTarget = JvmTarget.JVM_11
+		}
+	}
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_11
 		targetCompatibility = JavaVersion.VERSION_11
 	}
-	kotlinOptions {
-		jvmTarget = "11"
-	}
+
 	buildFeatures {
 		buildConfig = true
 		compose = true
@@ -70,6 +74,7 @@ dependencies {
 	implementation(libs.androidx.compose.ui.graphics)
 	implementation(libs.androidx.compose.ui.tooling.preview)
 	implementation(libs.androidx.compose.material3)
+	implementation(libs.kotlinx.datetime)
 
 	implementation(libs.micrsoft.signalr)
 	implementation(libs.timber)

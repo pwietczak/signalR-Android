@@ -1,17 +1,19 @@
 [versions]
 agp = "8.13.2"
-kotlin = "2.0.21"
+kotlin = "2.3.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
-composeBom = "2024.09.00"
-signalr = "10.0.1"
+composeBom = "2026.01.00"
+signalr = "10.0.2"
 timber = "5.0.1"
 permissions = "0.37.3"
 eventbus = "3.3.1"
+kotlinXDateTime = "0.7.1"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,7 +34,7 @@ micrsoft-signalr = {group="com.microsoft.signalr", name = "signalr" ,version.ref
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "permissions" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
-
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref="kotlinXDateTime"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
