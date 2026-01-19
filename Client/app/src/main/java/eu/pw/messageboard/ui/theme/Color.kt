@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher.ui.theme
+package eu.pw.messageboard.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

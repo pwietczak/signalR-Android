@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher.ui.presentation.screen.main.components
+package eu.pw.messageboard.presentation.screen.brodcastboard.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,10 +16,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import eu.pw.notificationpusher.domian.MessageType
-import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
-import eu.pw.notificationpusher.ui.presentation.previewprovider.MessageUiPreviewDataProvider
-import eu.pw.notificationpusher.ui.theme.NotificationPusherTheme
+import eu.pw.messageboard.domian.MessageType
+import eu.pw.messageboard.presentation.domain.MessageUi
+import eu.pw.messageboard.presentation.previewprovider.MessageUiPreviewDataProvider
+import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
 @Composable
 fun MessageCard(
@@ -53,7 +53,6 @@ fun MessageCard(
 				text = messageUi.text,
 				textAlign = TextAlign.Start,
 				overflow = TextOverflow.Visible,
-				softWrap = true,
 				modifier = Modifier.padding(8.dp),
 			    )
 		}
@@ -67,7 +66,7 @@ fun MessageCardPreview(
 		MessageUiPreviewDataProvider::class,
 	                 ) messageUi: MessageUi,
                       ) {
-	NotificationPusherTheme {
+	MessageBoardTheme {
 		Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
 			MessageCard(
 				modifier = Modifier,

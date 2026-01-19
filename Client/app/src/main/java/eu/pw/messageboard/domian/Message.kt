@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher.domian
+package eu.pw.messageboard.domian
 
 import kotlinx.datetime.LocalDateTime
 

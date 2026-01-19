@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher
+package eu.pw.messageboard
 
 import org.junit.Test
 

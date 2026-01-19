@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher
+package eu.pw.messageboard
 
 import android.os.Build
 import android.os.Bundle
@@ -7,10 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.Modifier
-import eu.pw.notificationpusher.data.service.SignalRService
-import eu.pw.notificationpusher.ui.presentation.screen.main.MainScreen
-import eu.pw.notificationpusher.ui.presentation.screen.main.MainScreenViewModel
-import eu.pw.notificationpusher.ui.theme.NotificationPusherTheme
+import eu.pw.messageboard.data.service.SignalRService
+import eu.pw.messageboard.presentation.screen.brodcastboard.MainScreen
+import eu.pw.messageboard.presentation.screen.brodcastboard.BroadcastViewModel
+import eu.pw.messageboard.ui.theme.MessageBoardTheme
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
@@ -24,10 +24,10 @@ class MainActivity : ComponentActivity() {
 		Timber.plant(Timber.DebugTree())
 		enableEdgeToEdge()
 		setContent {
-			NotificationPusherTheme {
+			MessageBoardTheme {
 				MainScreen(
 					modifier = Modifier,
-					viewModel = MainScreenViewModel(),
+					viewModel = BroadcastViewModel(),
 				          )
 			}
 		}

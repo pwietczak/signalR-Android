@@ -1,7 +1,7 @@
-package eu.pw.notificationpusher.ui.presentation.domain
+package eu.pw.messageboard.presentation.domain
 
-import eu.pw.notificationpusher.domian.Message
-import eu.pw.notificationpusher.domian.MessageType
+import eu.pw.messageboard.domian.Message
+import eu.pw.messageboard.domian.MessageType
 
 data class MessageUi (
 	val timeString: String,

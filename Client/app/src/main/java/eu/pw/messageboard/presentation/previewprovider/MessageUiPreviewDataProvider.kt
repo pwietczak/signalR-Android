@@ -1,8 +1,8 @@
-package eu.pw.notificationpusher.ui.presentation.previewprovider
+package eu.pw.messageboard.presentation.previewprovider
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import eu.pw.notificationpusher.domian.MessageType
-import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
+import eu.pw.messageboard.domian.MessageType
+import eu.pw.messageboard.presentation.domain.MessageUi
 
 class MessageUiPreviewDataProvider : PreviewParameterProvider<MessageUi> {
 

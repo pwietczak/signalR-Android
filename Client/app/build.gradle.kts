@@ -15,13 +15,13 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-	namespace = "eu.pw.notificationpusher"
+	namespace = "eu.pw.messageboard"
 	compileSdk {
 		version = release(36)
 	}
 
 	defaultConfig {
-		applicationId = "eu.pw.notificationpusher"
+		applicationId = "eu.pw.messageboard"
 		minSdk = 25
 		targetSdk = 36
 		versionCode = 1

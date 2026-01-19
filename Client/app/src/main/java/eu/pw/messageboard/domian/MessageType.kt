@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher.domian
+package eu.pw.messageboard.domian
 
 enum class MessageType {
 	DEFAULT,

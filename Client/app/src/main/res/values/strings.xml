@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">NotificationPusher</string>
-    <string name="message_board_no_messages">No messages yet</string>
+    <string name="app_name">Message Board</string>
+    <string name="broadcast_board_no_messages">No messages yet</string>
 </resources>

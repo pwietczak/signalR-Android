@@ -1,13 +1,13 @@
-package eu.pw.notificationpusher.data.service
+package eu.pw.messageboard.data.service
 
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
 import com.microsoft.signalr.TransportEnum
-import eu.pw.notificationpusher.BuildConfig
-import eu.pw.notificationpusher.domian.Message
-import eu.pw.notificationpusher.domian.MessageType
-import eu.pw.notificationpusher.domian.event.MessageEvent
+import eu.pw.messageboard.BuildConfig
+import eu.pw.messageboard.domian.Message
+import eu.pw.messageboard.domian.MessageType
+import eu.pw.messageboard.domian.event.MessageEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

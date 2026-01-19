@@ -1,4 +1,4 @@
-package eu.pw.notificationpusher.ui.presentation.screen.main
+package eu.pw.messageboard.presentation.screen.brodcastboard
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -21,14 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import eu.pw.notificationpusher.R
-import eu.pw.notificationpusher.ui.presentation.screen.main.components.MessageCard
-import eu.pw.notificationpusher.ui.theme.NotificationPusherTheme
+import eu.pw.messageboard.R
+import eu.pw.messageboard.presentation.screen.brodcastboard.components.MessageCard
+import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
 @Composable
 fun MainScreen(
 	modifier: Modifier,
-	viewModel: MainScreenViewModel,
+	viewModel: BroadcastViewModel,
               ) {
 	val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 	val listState = rememberLazyListState()
@@ -45,7 +45,7 @@ fun MainScreen(
 				contentAlignment = Alignment.Center,
 			   ) {
 				Text(
-					text = stringResource(R.string.message_board_no_messages),
+					text = stringResource(R.string.broadcast_board_no_messages),
 					style = MaterialTheme.typography.bodyLarge,
 				    )
 			}
@@ -80,7 +80,7 @@ fun MainScreen(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-	NotificationPusherTheme { //		MainScreen(modifier = Modifier, snackbarHostState = SnackbarHostState())
+	MessageBoardTheme { //		MainScreen(modifier = Modifier, snackbarHostState = SnackbarHostState())
 	}
 }
 
