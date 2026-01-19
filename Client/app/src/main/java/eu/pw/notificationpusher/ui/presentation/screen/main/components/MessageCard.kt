@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import eu.pw.notificationpusher.ui.presentation.domain.MessageType
+import eu.pw.notificationpusher.domian.MessageType
 import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
 import eu.pw.notificationpusher.ui.presentation.previewprovider.MessageUiPreviewDataProvider
 import eu.pw.notificationpusher.ui.theme.NotificationPusherTheme
@@ -40,8 +40,7 @@ fun MessageCard(
 		horizontalAlignment = Alignment.Start,
 	      ) {
 		Text(
-			text = messageUi.receiveTime.toString().replace('T', ' ').replaceAfterLast('.', "")
-				.dropLast(1),
+			text = messageUi.timeString,
 			color = MaterialTheme.colorScheme.onBackground,
 			textAlign = TextAlign.End,
 			style = MaterialTheme.typography.bodySmall,

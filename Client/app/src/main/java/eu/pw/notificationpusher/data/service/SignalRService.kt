@@ -1,19 +1,19 @@
 package eu.pw.notificationpusher.data.service
 
-import android.icu.util.TimeZone
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
 import com.microsoft.signalr.TransportEnum
 import eu.pw.notificationpusher.BuildConfig
+import eu.pw.notificationpusher.domian.Message
+import eu.pw.notificationpusher.domian.MessageType
 import eu.pw.notificationpusher.domian.event.MessageEvent
-import eu.pw.notificationpusher.ui.presentation.domain.MessageType
-import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
@@ -103,13 +103,13 @@ class SignalRService {
 		Timber.i("Service received message: $text. Posting to EventBus.")
 		EventBus.getDefault().post(
 			MessageEvent(
-				MessageUi(
+				Message(
 					receiveTime = Clock.System.now().toLocalDateTime(
-						kotlinx.datetime.TimeZone.currentSystemDefault(),
-					                                                ),
+						TimeZone.currentSystemDefault(),
+					                                               ),
 					type = MessageType.getById(type),
 					text = text,
-				         ),
+				       ),
 			            ),
 		                          )
 	}

@@ -1,25 +1,23 @@
 package eu.pw.notificationpusher.ui.presentation.domain
 
-import kotlinx.datetime.LocalDateTime
+import eu.pw.notificationpusher.domian.Message
+import eu.pw.notificationpusher.domian.MessageType
 
 data class MessageUi (
-	val receiveTime: LocalDateTime,
+	val timeString: String,
 	val type: MessageType = MessageType.DEFAULT,
 	val text: String
                 )
 
-enum class MessageType {
-	DEFAULT,
-	IMPORTANT;
-
-	companion object {
-		fun getById(id: Int): MessageType {
-			return when (id) {
-				1 -> IMPORTANT
-				else -> DEFAULT
-			}
-		}
-	}
+fun Message.toUi(): MessageUi {
+	return MessageUi(
+		timeString = receiveTime.toString()
+			.replace('T', ' ')
+			.replaceAfterLast('.', "")
+			.dropLast(1),
+		type = type,
+		text = text
+	       )
 }
 
 
