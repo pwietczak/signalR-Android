@@ -1,20 +1,18 @@
-package eu.pw.messageboard.presentation.domain
+package eu.pw.messageboard.presentation.model
 
 import eu.pw.messageboard.domian.Message
 import eu.pw.messageboard.domian.MessageType
 
 data class MessageUi (
-	val timeString: String,
+	val time: DisplayableDateTime,
 	val type: MessageType = MessageType.DEFAULT,
 	val text: String
-                )
+                ) {
+}
 
 fun Message.toUi(): MessageUi {
 	return MessageUi(
-		timeString = receiveTime.toString()
-			.replace('T', ' ')
-			.replaceAfterLast('.', "")
-			.dropLast(1),
+		time = DisplayableDateTime(receiveTime),
 		type = type,
 		text = text
 	       )

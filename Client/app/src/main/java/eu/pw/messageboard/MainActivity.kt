@@ -6,11 +6,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import eu.pw.messageboard.data.service.SignalRService
-import eu.pw.messageboard.presentation.screen.brodcastboard.MainScreen
+import eu.pw.messageboard.navigation.AppNavHost
+import eu.pw.messageboard.presentation.screen.brodcastboard.BroadcastBoardScreen
 import eu.pw.messageboard.presentation.screen.brodcastboard.BroadcastViewModel
+import eu.pw.messageboard.presentation.screen.onboarding.OnboardingScreen
+import eu.pw.messageboard.presentation.screen.onboarding.OnboardingViewModel
 import eu.pw.messageboard.ui.theme.MessageBoardTheme
+import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
@@ -25,9 +32,10 @@ class MainActivity : ComponentActivity() {
 		enableEdgeToEdge()
 		setContent {
 			MessageBoardTheme {
-				MainScreen(
+				val navController = rememberNavController()
+				AppNavHost(
 					modifier = Modifier,
-					viewModel = BroadcastViewModel(),
+					navController = navController,
 				          )
 			}
 		}

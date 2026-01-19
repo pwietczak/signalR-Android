@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Message Board</string>
     <string name="broadcast_board_no_messages">No messages yet</string>
+    <string name="onboarding_user_name_label">User Name</string>
+    <string name="onboarding_server_address_label">Server Address</string>
+    <string name="onboarding_save_button_text">Zapisz</string>
 </resources>

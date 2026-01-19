@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import eu.pw.messageboard.domian.MessageType
-import eu.pw.messageboard.presentation.domain.MessageUi
+import eu.pw.messageboard.presentation.model.MessageUi
 import eu.pw.messageboard.presentation.previewprovider.MessageUiPreviewDataProvider
 import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
@@ -40,7 +40,7 @@ fun MessageCard(
 		horizontalAlignment = Alignment.Start,
 	      ) {
 		Text(
-			text = messageUi.timeString,
+			text = messageUi.time.getFormated(),
 			color = MaterialTheme.colorScheme.onBackground,
 			textAlign = TextAlign.End,
 			style = MaterialTheme.typography.bodySmall,

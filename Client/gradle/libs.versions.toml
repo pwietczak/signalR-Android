@@ -13,6 +13,10 @@ timber = "5.0.1"
 permissions = "0.37.3"
 eventbus = "3.3.1"
 kotlinXDateTime = "0.7.1"
+koin = "4.1.1"
+datastore = "1.2.0"
+kotlinx-serialization-json = "1.9.0"
+compose-navigation = "2.8.0"
 
 
 [libraries]
@@ -36,7 +40,24 @@ permissions = { group = "com.google.accompanist", name = "accompanist-permission
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref="kotlinXDateTime"}
 
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+
+datastore = { group = "androidx.datastore", name = "datastore", version.ref="datastore"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[bundles]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-androidx-compose"
+]

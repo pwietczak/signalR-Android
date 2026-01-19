@@ -26,10 +26,10 @@ import eu.pw.messageboard.presentation.screen.brodcastboard.components.MessageCa
 import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
 @Composable
-fun MainScreen(
+fun BroadcastBoardScreen(
 	modifier: Modifier,
 	viewModel: BroadcastViewModel,
-              ) {
+                        ) {
 	val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 	val listState = rememberLazyListState()
 

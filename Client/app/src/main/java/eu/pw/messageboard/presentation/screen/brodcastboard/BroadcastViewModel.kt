@@ -2,7 +2,7 @@ package eu.pw.messageboard.presentation.screen.brodcastboard
 
 import androidx.lifecycle.ViewModel
 import eu.pw.messageboard.domian.event.MessageEvent
-import eu.pw.messageboard.presentation.domain.toUi
+import eu.pw.messageboard.presentation.model.toUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
