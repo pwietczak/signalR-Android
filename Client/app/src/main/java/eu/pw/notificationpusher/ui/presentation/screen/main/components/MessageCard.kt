@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import eu.pw.notificationpusher.ui.presentation.domain.MessageType
 import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
 import eu.pw.notificationpusher.ui.presentation.previewprovider.MessageUiPreviewDataProvider
 import eu.pw.notificationpusher.ui.theme.NotificationPusherTheme
@@ -24,12 +26,21 @@ fun MessageCard(
 	modifier: Modifier,
 	messageUi: MessageUi,
                ) {
+	val cardColors = if (messageUi.type == MessageType.IMPORTANT){
+		CardDefaults.cardColors().copy(
+			containerColor = MaterialTheme.colorScheme.primaryContainer,
+			contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+									  )
+	}else
+	{
+		CardDefaults.cardColors()
+	}
 	Column(
 		modifier = modifier,
 		horizontalAlignment = Alignment.Start,
 	      ) {
 		Text(
-			text = messageUi.time.toString().replace('T', ' ').replaceAfterLast('.', "")
+			text = messageUi.receiveTime.toString().replace('T', ' ').replaceAfterLast('.', "")
 				.dropLast(1),
 			color = MaterialTheme.colorScheme.onBackground,
 			textAlign = TextAlign.End,
@@ -37,6 +48,7 @@ fun MessageCard(
 		    )
 		Card(
 			modifier = Modifier,
+			colors = cardColors
 		    ) {
 			Text(
 				text = messageUi.text,

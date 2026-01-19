@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-public class PushHub : Hub
+public class ServerHub : Hub
 {
 	public override async Task OnConnectedAsync()
 	{
@@ -28,8 +28,8 @@ public class PushHub : Hub
         await base.OnDisconnectedAsync(exception);
 	}
 
-	public async Task SendPush(string userId, string message)
+	public async Task SendMessage(string userId, Message message)
 	{
-		await Clients.Group(userId).SendAsync("ReceivePush", message);
+		await Clients.Group(userId).SendAsync(HubConfig.MESSAGE_METHOD_NAME, message);
 	}
 }

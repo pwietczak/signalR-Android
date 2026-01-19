@@ -1,49 +1,56 @@
 package eu.pw.notificationpusher.data.service
 
+import android.icu.util.TimeZone
 import com.microsoft.signalr.HubConnection
 import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
 import com.microsoft.signalr.TransportEnum
 import eu.pw.notificationpusher.BuildConfig
 import eu.pw.notificationpusher.domian.event.MessageEvent
+import eu.pw.notificationpusher.ui.presentation.domain.MessageType
+import eu.pw.notificationpusher.ui.presentation.domain.MessageUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toLocalDateTime
 import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
+import kotlin.time.Clock
 
 class SignalRService {
-	companion object{
-		const val RECONNECT_DELAY = 5000L
+	companion object {
+		const val RECONNECT_DELAY = 15_000L
+		const val HANDSHAKE_CONNECTION_TIMEOUT = 15_000L
+		const val USER_ID = 2137
+		const val RECEIVE_MESSAGE_METHOD_NAME = "ReceiveMessage"
 	}
 
 	private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 	private var hubConnection: HubConnection? = null
 
 	fun startSignalRConnection() {
-		// Jeśli już trwa łączenie lub jesteśmy połączeni, nie rób nic
 		if (isConnectedOrConnecting()) {
 			return
 		}
 
 		Timber.i("Starting SignalR hub connection")
 		val connectionUrl = constructConnectionUrl()
-		Timber.i("Connection URL: $connectionUrl")
 
-		hubConnection = HubConnectionBuilder.create(connectionUrl)
-			.withTransport(TransportEnum.LONG_POLLING)
-			.build()
+		hubConnection =
+			HubConnectionBuilder.create(connectionUrl).withTransport(TransportEnum.LONG_POLLING)
+				.withHandshakeResponseTimeout(HANDSHAKE_CONNECTION_TIMEOUT).build()
 
 		hubConnection?.on(
-			"ReceivePush",
-			{ message -> scope.launch { onReceivePush(message) } },
+			RECEIVE_MESSAGE_METHOD_NAME,
+			{ type, text -> scope.launch { onReceiveMessage(type, text) } },
+			Int::class.java,
 			String::class.java,
 		                 )
 
 		hubConnection?.onClosed {
-			Timber.e("SignalR connection closed. Retrying in ${RECONNECT_DELAY/1000}s...")
+			Timber.e("SignalR connection closed. Retrying in ${RECONNECT_DELAY / 1000}s...")
 			scheduleReconnect()
 		}
 
@@ -52,23 +59,33 @@ class SignalRService {
 				try {
 					hubConnection?.start()?.blockingAwait()
 					Timber.i("SignalR started. State: ${hubConnection?.connectionState}")
-				} catch (e: Exception) {
-					Timber.e("SignalR failed to start, e:$e. Retrying in ${RECONNECT_DELAY / 1000}s...")
+				}
+				catch (e: Exception) {
+					Timber.e(
+						"SignalR failed to start, e:$e. Retrying in ${RECONNECT_DELAY / 1000}s...",
+					        )
 					scheduleReconnect()
 				}
 			}
-		} catch (e: Exception) {
+		}
+		catch (e: Exception) {
 			Timber.e("Error during SignalR setup: $e")
 		}
 	}
 
 	private fun isConnectedOrConnecting(): Boolean {
-		return hubConnection?.connectionState != null && hubConnection?.connectionState != HubConnectionState.DISCONNECTED
+		val isConnectionStateNull = hubConnection?.connectionState == null
+		val isConnectionStateDisconnected =
+			hubConnection?.connectionState == HubConnectionState.DISCONNECTED
+		Timber.i(
+			"isConnectionStateNull: $isConnectionStateNull, isConnectionStateDisconnected: $isConnectionStateDisconnected",
+		        )
+		return !isConnectionStateNull && !isConnectionStateDisconnected
 	}
 
 	private fun constructConnectionUrl(): String {
-		val connectionUrl = "http://${BuildConfig.SERVER_ADDERSS}/pushHub?userId=2137"
-		Timber.i("Connection URL: $connectionUrl")
+		val connectionUrl = "http://${BuildConfig.SERVER_ADDERSS}/messageHub?userId=${USER_ID}"
+		Timber.i("Constructed SignalR connection URL: $connectionUrl")
 		return connectionUrl
 	}
 
@@ -79,15 +96,26 @@ class SignalRService {
 		}
 	}
 
-	private fun onReceivePush(message: String) {
-		Timber.i("Service received message: $message. Posting to EventBus.")
-		EventBus.getDefault().post(MessageEvent(message))
+	private fun onReceiveMessage(
+		type: Int,
+		text: String,
+	                            ) {
+		Timber.i("Service received message: $text. Posting to EventBus.")
+		EventBus.getDefault().post(
+			MessageEvent(
+				MessageUi(
+					receiveTime = Clock.System.now().toLocalDateTime(
+						kotlinx.datetime.TimeZone.currentSystemDefault(),
+					                                                ),
+					type = MessageType.getById(type),
+					text = text,
+				         ),
+			            ),
+		                          )
 	}
 
 	fun stopSignalRConnection() {
 		Timber.i("Stopping SignalR hub connection")
 		hubConnection?.stop()
 	}
-
-	data class ImportantMessage(val message: String)
 }

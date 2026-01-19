@@ -6,5 +6,5 @@ builder.Services.AddControllers();
 var app = builder.Build();
 app.UseRouting();
 app.MapControllers();
-app.MapHub<PushHub>("/pushHub");
+app.MapHub<ServerHub>("/messageHub");
 app.Run();
