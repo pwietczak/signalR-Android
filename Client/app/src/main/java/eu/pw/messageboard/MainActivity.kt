@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		signalRService.startSignalRConnection()
-		Timber.plant(Timber.DebugTree())
 		enableEdgeToEdge()
 		setContent {
 			MessageBoardTheme {

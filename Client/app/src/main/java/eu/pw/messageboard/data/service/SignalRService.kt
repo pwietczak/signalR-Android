@@ -5,9 +5,12 @@ import com.microsoft.signalr.HubConnectionBuilder
 import com.microsoft.signalr.HubConnectionState
 import com.microsoft.signalr.TransportEnum
 import eu.pw.messageboard.BuildConfig
+import eu.pw.messageboard.data.domain.MessageDto
+import eu.pw.messageboard.data.domain.ResponseDto
 import eu.pw.messageboard.domian.Message
 import eu.pw.messageboard.domian.MessageType
 import eu.pw.messageboard.domian.event.MessageEvent
+import eu.pw.messageboard.domian.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -25,6 +28,7 @@ class SignalRService {
 		const val HANDSHAKE_CONNECTION_TIMEOUT = 15_000L
 		const val USER_ID = 2137
 		const val RECEIVE_MESSAGE_METHOD_NAME = "ReceiveMessage"
+		const val SEND_RESPONSE_METHOD_NAME = "GetAck"
 	}
 
 	private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -42,14 +46,13 @@ class SignalRService {
 			HubConnectionBuilder.create(connectionUrl).withTransport(TransportEnum.LONG_POLLING)
 				.withHandshakeResponseTimeout(HANDSHAKE_CONNECTION_TIMEOUT).build()
 
-		hubConnection?.on(
+		hubConnection!!.on(
 			RECEIVE_MESSAGE_METHOD_NAME,
-			{ type, text -> scope.launch { onReceiveMessage(type, text) } },
-			Int::class.java,
-			String::class.java,
+			{ messageDto -> scope.launch { onReceiveMessage(messageDto) } },
+			MessageDto::class.java,
 		                 )
 
-		hubConnection?.onClosed {
+		hubConnection!!.onClosed {
 			Timber.e("SignalR connection closed. Retrying in ${RECONNECT_DELAY / 1000}s...")
 			scheduleReconnect()
 		}
@@ -57,7 +60,7 @@ class SignalRService {
 		try {
 			scope.launch(Dispatchers.IO) {
 				try {
-					hubConnection?.start()?.blockingAwait()
+					hubConnection!!.start()!!.blockingAwait()
 					Timber.i("SignalR started. State: ${hubConnection?.connectionState}")
 				}
 				catch (e: Exception) {
@@ -89,29 +92,50 @@ class SignalRService {
 		return connectionUrl
 	}
 
+	private fun sendResponse(responseDto: ResponseDto): Boolean{
+		if (hubConnection == null) {
+			Timber.i("SignalR connection is null. Not sending message.")
+			return false
+		}
+		if (hubConnection?.connectionState != HubConnectionState.CONNECTED) {
+			Timber.i("SignalR connection is not connected. Not sending message.")
+			return false
+		}
+		hubConnection!!.send(SEND_RESPONSE_METHOD_NAME, responseDto)
+		return true
+	}
+
 	private fun scheduleReconnect() {
 		scope.launch {
 			delay(RECONNECT_DELAY)
+			Timber.i("Reconnecting to SignalR...")
 			startSignalRConnection()
 		}
 	}
 
-	private fun onReceiveMessage(
-		type: Int,
-		text: String,
+	private fun onReceiveMessage( messageDto: MessageDto
 	                            ) {
-		Timber.i("Service received message: $text. Posting to EventBus.")
+		sendResponseIfNeeded(messageDto)
+		val message = messageDto.toMessage()
+		Timber.i("Service received $message. Posting to EventBus.")
 		EventBus.getDefault().post(
 			MessageEvent(
-				Message(
-					receiveTime = Clock.System.now().toLocalDateTime(
-						TimeZone.currentSystemDefault(),
-					                                               ),
-					type = MessageType.getById(type),
-					text = text,
-				       ),
+				message = messageDto.toMessage(),
 			            ),
 		                          )
+	}
+
+	private fun sendResponseIfNeeded(messageDto: MessageDto){
+		if (MessageType.getById(messageDto.type) != MessageType.IMPORTANT)
+			return
+		Timber.i("Service received important message. Sending response.")
+		val responseDto = ResponseDto(
+			messageId = messageDto.id,
+			status = 1,
+		)
+		sendResponse(responseDto)
+
+
 	}
 
 	fun stopSignalRConnection() {
