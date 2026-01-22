@@ -13,8 +13,10 @@ import eu.pw.messageboard.domian.event.MessageEvent
 import eu.pw.messageboard.domian.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -43,8 +45,11 @@ class SignalRService {
 		val connectionUrl = constructConnectionUrl()
 
 		hubConnection =
-			HubConnectionBuilder.create(connectionUrl).withTransport(TransportEnum.LONG_POLLING)
-				.withHandshakeResponseTimeout(HANDSHAKE_CONNECTION_TIMEOUT).build()
+			HubConnectionBuilder
+				.create(connectionUrl)
+				.withTransport(TransportEnum.WEBSOCKETS)
+				.withHandshakeResponseTimeout(HANDSHAKE_CONNECTION_TIMEOUT)
+				.build()
 
 		hubConnection!!.on(
 			RECEIVE_MESSAGE_METHOD_NAME,
@@ -53,8 +58,8 @@ class SignalRService {
 		                 )
 
 		hubConnection!!.onClosed {
-			Timber.e("SignalR connection closed. Retrying in ${RECONNECT_DELAY / 1000}s...")
-			scheduleReconnect()
+			Timber.e("SignalR connection closed.")
+			reconnect()
 		}
 
 		try {
@@ -65,9 +70,9 @@ class SignalRService {
 				}
 				catch (e: Exception) {
 					Timber.e(
-						"SignalR failed to start, e:$e. Retrying in ${RECONNECT_DELAY / 1000}s...",
+						"SignalR failed to start, e:$e.",
 					        )
-					scheduleReconnect()
+					reconnect()
 				}
 			}
 		}
@@ -105,11 +110,33 @@ class SignalRService {
 		return true
 	}
 
-	private fun scheduleReconnect() {
-		scope.launch {
-			delay(RECONNECT_DELAY)
-			Timber.i("Reconnecting to SignalR...")
-			startSignalRConnection()
+	private var reconnectJob: Job? = null
+
+	private fun reconnect() {
+		if (reconnectJob?.isActive == true) {
+			Timber.i("Reconnect already running")
+			return
+		}
+
+		reconnectJob = scope.launch(Dispatchers.IO) {
+			Timber.i("Reconnect loop started")
+
+			while (isActive) {
+				if (hubConnection?.connectionState == HubConnectionState.CONNECTED) {
+					Timber.i("Already connected, stopping reconnect loop")
+					break
+				}
+
+				try {
+					Timber.i("Trying to reconnect...")
+					hubConnection?.start()?.blockingAwait()
+					Timber.i("Reconnected successfully")
+					break
+				} catch (e: Exception) {
+					Timber.e(e, "Reconnect failed, retrying in ${RECONNECT_DELAY / 1000}s")
+					delay(RECONNECT_DELAY)
+				}
+			}
 		}
 	}
 
