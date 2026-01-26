@@ -11,8 +11,11 @@ public class ServerHub : Hub
 
 	public override async Task OnConnectedAsync()
 	{
-		_logger.LogInformation("Client connected: {ConnectionId}", Context.ConnectionId);
-		var userId = Context.GetHttpContext()?.Request.Query["userId"];
+		var userId = Context.GetHttpContext()?.Request.Headers["UserId"].ToString();
+		_logger.LogInformation(
+            "Client connected with connectionId: {ConnectionId}, UserId from header: {UserId}",
+            Context.ConnectionId, userId
+			);
 		if (!string.IsNullOrEmpty(userId))
 		{
 			_logger.LogInformation("Adding user to group: {UserId}", userId);

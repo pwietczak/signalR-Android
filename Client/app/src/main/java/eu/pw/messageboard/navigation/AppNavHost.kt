@@ -15,6 +15,7 @@ import org.koin.androidx.compose.koinViewModel
 fun AppNavHost(
 	modifier: Modifier,
 	navController: NavHostController,
+	onOnboardingFinished: () -> Unit
               ) {
 	NavHost(
 		navController = navController,
@@ -25,6 +26,7 @@ fun AppNavHost(
 				modifier = modifier,
 				viewModel = koinViewModel<OnboardingViewModel>(),
 				onEndOnboarding = {
+					onOnboardingFinished()
 					navController.navigate(AppDestination.BroadcastBoard)
 				}
 			                )

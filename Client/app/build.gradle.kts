@@ -1,18 +1,10 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
 	alias(libs.plugins.android.application)
 	alias(libs.plugins.kotlin.android)
 	alias(libs.plugins.kotlin.compose)
 	alias(libs.plugins.kotlin.serialization)
-}
-
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file(".gradle/gradle.properties")
-if (localPropertiesFile.exists()) {
-	localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -33,20 +25,11 @@ android {
 
 	buildTypes {
 		debug {
-			buildConfigField(
-					"String",
-					"SERVER_ADDERSS",
-					"\"${localProperties.getProperty("SERVER_ADDERSS", "")}\"",
-							)
+			isMinifyEnabled = false
 		}
 
 		release {
-			isMinifyEnabled = false
-			buildConfigField(
-					"String",
-					"SERVER_ADDERSS",
-					"\"${localProperties.getProperty("SERVER_ADDERSS", "")}\"",
-							)
+			isMinifyEnabled = true
 		}
 	}
 

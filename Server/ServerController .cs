@@ -62,7 +62,6 @@ public class ServerController : ControllerBase
 		message.Type
 	);
 	}
-
 }
 
 public class ControllerMessage
