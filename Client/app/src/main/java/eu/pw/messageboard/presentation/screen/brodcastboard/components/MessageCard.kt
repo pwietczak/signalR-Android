@@ -26,34 +26,36 @@ fun MessageCard(
 	modifier: Modifier,
 	messageUi: MessageUi,
                ) {
-	val cardColors = if (messageUi.type == MessageType.IMPORTANT){
+	val cardColors = if (messageUi.type == MessageType.IMPORTANT) {
 		CardDefaults.cardColors().copy(
 			containerColor = MaterialTheme.colorScheme.primaryContainer,
 			contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-									  )
-	}else
-	{
+		                              )
+	}
+	else {
 		CardDefaults.cardColors()
 	}
-	Column(
+	Card(
 		modifier = modifier,
-		horizontalAlignment = Alignment.Start,
-	      ) {
-		Text(
-			text = messageUi.time.getFormated(),
-			color = MaterialTheme.colorScheme.onBackground,
-			textAlign = TextAlign.End,
-			style = MaterialTheme.typography.bodySmall,
-		    )
-		Card(
-			modifier = Modifier,
-			colors = cardColors
-		    ) {
+		colors = cardColors,
+	    ) {
+		Column(
+			modifier = Modifier
+				.padding(8.dp),
+			horizontalAlignment = Alignment.Start,
+		      ) {
 			Text(
 				text = messageUi.text,
+				modifier = Modifier,
 				textAlign = TextAlign.Start,
 				overflow = TextOverflow.Visible,
-				modifier = Modifier.padding(8.dp),
+			    )
+			Text(
+				text = messageUi.time.getFormated(),
+				modifier = Modifier.align(Alignment.End),
+				color = MaterialTheme.colorScheme.onBackground,
+				textAlign = TextAlign.End,
+				style = MaterialTheme.typography.bodySmall,
 			    )
 		}
 	}
@@ -67,7 +69,8 @@ fun MessageCardPreview(
 	                 ) messageUi: MessageUi,
                       ) {
 	MessageBoardTheme {
-		Surface(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+		Surface(modifier = Modifier
+			.background(MaterialTheme.colorScheme.background).padding(16.dp)) {
 			MessageCard(
 				modifier = Modifier,
 				messageUi = messageUi,
