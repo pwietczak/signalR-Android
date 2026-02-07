@@ -5,11 +5,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,13 +22,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.pw.messageboard.R
+import eu.pw.messageboard.presentation.previewprovider.BroadcastBoardUiStatePreviewProvider
+import eu.pw.messageboard.presentation.screen.brodcastboard.components.BroadcastBoardTopBar
 import eu.pw.messageboard.presentation.screen.brodcastboard.components.MessageCard
 import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BroadcastBoardScreen(
 	modifier: Modifier,
@@ -36,12 +44,36 @@ fun BroadcastBoardScreen(
 	LaunchedEffect(uiState.value.messages.size) {
 		listState.animateScrollToItem(uiState.value.messages.size)
 	}
+
+	BroadcastBoardScreenContent(
+		modifier = modifier,
+		uiState = uiState.value,
+		listState = listState,
+	                           )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BroadcastBoardScreenContent(
+	modifier: Modifier,
+	uiState: BroadcastBoardUiState,
+	listState: LazyListState,
+	onGoToSettings: () -> Unit = {},
+                               ) {
 	Scaffold(
 		modifier = modifier.fillMaxSize(),
+		topBar = {
+			BroadcastBoardTopBar(
+				modifier = Modifier,
+				onGoToSettings = onGoToSettings
+								)
+		},
 	        ) { innerPadding ->
-		if (uiState.value.messages.isEmpty()) {
+		if (uiState.messages.isEmpty()) {
 			Box(
-				modifier = Modifier.fillMaxSize(),
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(innerPadding),
 				contentAlignment = Alignment.Center,
 			   ) {
 				Text(
@@ -56,12 +88,15 @@ fun BroadcastBoardScreen(
 				verticalArrangement = Arrangement.spacedBy(4.dp),
 				state = listState,
 				modifier = Modifier
-					.fillMaxSize(1f)
+					.fillMaxSize()
 					.padding(innerPadding)
 					.padding(horizontal = 16.dp),
 			          ) {
+				item {
+					Spacer(modifier = Modifier.size(4.dp))
+				}
 				items(
-					items = uiState.value.messages,
+					items = uiState.messages,
 					key = { it.hashCode() },
 				     ) {
 					MessageCard(
@@ -77,10 +112,18 @@ fun BroadcastBoardScreen(
 	}
 }
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
+@PreviewLightDark
 @Composable
-fun GreetingPreview() {
-	MessageBoardTheme { //		MainScreen(modifier = Modifier, snackbarHostState = SnackbarHostState())
+fun MessageBoardPreview(
+	@PreviewParameter(BroadcastBoardUiStatePreviewProvider::class) uiState: BroadcastBoardUiState,
+                       ) {
+	MessageBoardTheme {
+		BroadcastBoardScreenContent(
+			modifier = Modifier,
+			uiState = uiState,
+			listState = rememberLazyListState(),
+			onGoToSettings = { },
+		                           )
 	}
 }
-

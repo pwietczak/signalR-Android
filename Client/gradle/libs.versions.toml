@@ -7,7 +7,8 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
-composeBom = "2026.01.00"
+composeBom = "2026.01.01"
+compose-material-icons-extended = "1.7.8"
 signalr = "10.0.2"
 timber = "5.0.1"
 permissions = "0.37.3"
@@ -17,6 +18,7 @@ koin = "4.1.1"
 datastore = "1.2.0"
 kotlinx-serialization-json = "1.9.0"
 compose-navigation = "2.8.0"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -33,7 +35,8 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref="material3" }
+androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-material-icons-extended" }
 micrsoft-signalr = {group="com.microsoft.signalr", name = "signalr" ,version.ref = "signalr"}
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "permissions" }
