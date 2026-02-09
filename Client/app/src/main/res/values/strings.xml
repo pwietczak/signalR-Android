@@ -3,6 +3,12 @@
     <string name="broadcast_board_no_messages">No messages yet</string>
     <string name="onboarding_user_name_label">User Name</string>
     <string name="onboarding_server_address_label">Server Address</string>
-    <string name="onboarding_save_button_text">Zapisz</string>
+    <string name="onboarding_save_button_text">Save</string>
     <string name="broadcast_board_title">Broadcast Board</string>
+    <string name="validator_error_blank_input">Cannot be blank</string>
+    <string name="validator_error_trailing_whitespaces">Cannot contain trailing whitespaces</string>
+    <string name="validator_error_only_digit_or_letter_or_space">Only digits, letters and spaces allowed</string>
+    <string name="validator_error_invalid_server_address_parts">Adders has to consist of address and port number</string>
+    <string name="validator_error_invalid_ip_format">Invalid ip address format</string>
+    <string name="validator_error_invalid_port_format">Invalid port format</string>
 </resources>
