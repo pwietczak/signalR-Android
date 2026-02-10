@@ -2,6 +2,7 @@ package eu.pw.messageboard
 
 import android.app.Application
 import eu.pw.messageboard.di.appModule
+import eu.pw.messageboard.di.dataModule
 import eu.pw.messageboard.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,6 +20,7 @@ class MessageBoardApp : Application() {
 			androidContext(this@MessageBoardApp)
 			modules(
 				appModule,
+				dataModule,
 				viewModelModule
 			)
 		}

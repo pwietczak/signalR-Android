@@ -9,6 +9,7 @@ import eu.pw.messageboard.data.domain.ResponseDto
 import eu.pw.messageboard.data.preferences.app.AppPreferencesRepository
 import eu.pw.messageboard.domian.MessageType
 import eu.pw.messageboard.domian.event.MessageEvent
+import eu.pw.messageboard.domian.mediaplayer.INewMessageNotifier
 import eu.pw.messageboard.domian.toMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,8 @@ import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 
 class SignalRService (
-	private val appPreferencesRepository: AppPreferencesRepository
+	private val appPreferencesRepository: AppPreferencesRepository,
+	private val newMessageNotifier: INewMessageNotifier
 					 ){
 	companion object {
 		const val RECONNECT_DELAY = 15_000L
@@ -147,14 +149,14 @@ class SignalRService (
 		}
 	}
 
-	private fun onReceiveMessage( messageDto: MessageDto
-	                            ) {
+	private fun onReceiveMessage( messageDto: MessageDto) {
+		newMessageNotifier.alertNewMessage()
 		sendResponseIfNeeded(messageDto)
 		val message = messageDto.toMessage()
 		Timber.i("Service received $message. Posting to EventBus.")
 		EventBus.getDefault().post(
 			MessageEvent(
-				message = messageDto.toMessage(),
+				message = message,
 			            ),
 		                          )
 	}
