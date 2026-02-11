@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.pw.messageboard.R
 import eu.pw.messageboard.presentation.previewprovider.OnboardingUIStatePreviewDataProvider
+import eu.pw.messageboard.presentation.screen.onboarding.components.InputField
 import eu.pw.messageboard.ui.theme.MessageBoardTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
 	modifier: Modifier,
@@ -24,7 +24,11 @@ fun OnboardingScreen(
 	onEndOnboarding: () -> Unit,
                     ) {
 	val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-	if (uiState.appPreferences.isInitialized) onEndOnboarding()
+	LaunchedEffect(uiState.appPreferences.isInitialized) {
+		if (uiState.appPreferences.isInitialized) {
+			onEndOnboarding()
+		}
+	}
 	OnboardingScreenContent(modifier, uiState, viewModel::update)
 }
 
@@ -32,7 +36,7 @@ fun OnboardingScreen(
 fun OnboardingScreenContent(
 	modifier: Modifier,
 	uiState: OnboardingUiState,
-	safe: (String, String) -> Unit,
+	onSaveClick: (String, String) -> Unit,
                            ) {
 	Scaffold(modifier = modifier.fillMaxSize()) { scaffoldPadding ->
 		if (uiState.isLoading) {
@@ -60,26 +64,23 @@ fun OnboardingScreenContent(
 					verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
 					horizontalAlignment = Alignment.CenterHorizontally,
 				      ) {
-					OutlinedTextField(
+					InputField(
+						modifier = Modifier.fillMaxWidth(),
 						value = tempNickname,
 						onValueChange = { tempNickname = it },
-						label = { Text(stringResource(R.string.onboarding_user_name_label)) },
+						errorResId = uiState.userNameError,
+						labelResId = R.string.onboarding_user_name_label,
+					          )
+					InputField(
 						modifier = Modifier.fillMaxWidth(),
-					                 )
-					OutlinedTextField(
 						value = tempServerAddress,
 						onValueChange = { tempServerAddress = it },
-						label = { Text(stringResource(R.string.onboarding_server_address_label)) },
-						modifier = Modifier.fillMaxWidth(),
-					                 )
-
-					Text(
-						text = "Aktualny zapis: ${uiState.appPreferences}",
-						style = MaterialTheme.typography.bodySmall,
-					    )
+						errorResId = uiState.serverAddressError,
+						labelResId = R.string.onboarding_server_address_label,
+					          )
 				}
 				Button(
-					onClick = { safe(tempNickname, tempServerAddress) },
+					onClick = { onSaveClick(tempNickname, tempServerAddress) },
 					modifier = Modifier.align(Alignment.BottomCenter),
 				      ) {
 					Text(stringResource(R.string.onboarding_save_button_text))
@@ -98,7 +99,7 @@ fun OnboardingScreenPreview(
 		OnboardingScreenContent(
 			modifier = Modifier,
 			uiState = uiState,
-			safe = { _, _ -> },
+			onSaveClick = { _, _ -> },
 		                       )
 	}
 }
